@@ -3,7 +3,7 @@
  * Handles communication with Cloudflare Workers
  */
 
-const WORKER_URL = 'https://api.your-subdomain.workers.dev'; // Aapka deployed worker URL
+const WORKER_URL = 'lifeos-api.web-app-vilayash.workers.dev'; // Aapka deployed worker URL
 
 const api = {
     // Helper to get Auth Token from Supabase session
