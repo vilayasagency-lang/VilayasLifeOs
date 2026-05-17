@@ -1,0 +1,28 @@
+// Supabase Configuration
+const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';
+
+// Initialize the Supabase Client
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Global Helper to check session
+async function checkUserSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error || !session) {
+        return null;
+    }
+    return session.user;
+}
+
+// Global Logout Function
+async function logoutUser() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        alert("Error logging out: " + error.message);
+    } else {
+        window.location.href = '/login.html';
+    }
+}
+
+// Export for use in other files
+window.supabase = supabase;
