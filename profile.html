@@ -3,127 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Profile | LifeOS</title>
+    <title>My Profile | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
     <header class="app-header">
         <div class="logo">Settings</div>
-        <button id="logout-btn" style="background:transparent; border:none; color:var(--danger); font-weight:600;">Logout</button>
+        <button id="logout-btn" style="background:none; border:none; color:var(--danger); font-weight:700;">Logout</button>
     </header>
 
-    <div class="content">
-        <!-- Avatar Section -->
+    <div class="app-container">
         <div style="text-align:center; margin-bottom: 30px;">
             <div style="position:relative; display:inline-block;">
-                <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--primary); object-fit:cover;">
-                <label for="avatar-upload" style="position:absolute; bottom:0; right:0; background:var(--primary); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid var(--bg);">
-                    <i class="ri-camera-fill" style="font-size:1rem;"></i>
-                </label>
-                <input type="file" id="avatar-upload" hidden accept="image/*">
+                <img id="avatar-img" src="https://ui-avatars.com/api/?name=User" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--primary);">
+                <input type="file" id="avatar-input" hidden>
+                <button onclick="document.getElementById('avatar-input').click()" style="position:absolute; bottom:0; right:0; background:var(--primary); border:none; color:white; width:30px; height:30px; border-radius:50%;"><i class="ri-camera-line"></i></button>
             </div>
-            <h2 id="profile-name" style="margin-top:15px;">Loading...</h2>
-            <p id="profile-email" style="color:var(--text-dim); font-size:0.9rem;">user@example.com</p>
+            <h2 id="display-name" style="margin-top:15px;">Loading...</h2>
         </div>
 
-        <!-- Details List -->
-        <div class="card" style="padding:0; overflow:hidden;">
-            <div class="list-item">
-                <i class="ri-phone-line"></i>
-                <div class="list-content">
-                    <label>Phone Number</label>
-                    <p id="profile-phone">Not set</p>
-                </div>
+        <div class="auth-card">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="edit-name">
             </div>
-            <div class="list-item">
-                <i class="ri-user-heart-line"></i>
-                <div class="list-content">
-                    <label>Gender</label>
-                    <p id="profile-gender" style="text-transform: capitalize;">-</p>
-                </div>
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="edit-phone">
             </div>
-            <div class="list-item">
-                <i class="ri-calendar-event-line"></i>
-                <div class="list-content">
-                    <label>Date of Birth</label>
-                    <p id="profile-dob">-</p>
-                </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="edit-gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
-            <div class="list-item" onclick="location.href='subscription.html'">
-                <i class="ri-vip-crown-line" style="color:#f59e0b"></i>
-                <div class="list-content">
-                    <label>Membership</label>
-                    <p id="profile-plan" style="color:#f59e0b; font-weight:600;">Free Tier</p>
-                </div>
-                <i class="ri-arrow-right-s-line" style="color:var(--text-dim)"></i>
-            </div>
+            <button onclick="updateProfile()" class="btn-primary">Update Profile</button>
         </div>
-
-        <!-- Account Actions -->
-        <h3 style="margin: 20px 0 10px 0; font-size: 1rem; color:var(--text-dim);">Security</h3>
-        <div class="card" style="padding:0; overflow:hidden;">
-            <div class="list-item" id="reset-pass-btn">
-                <i class="ri-key-2-line"></i>
-                <div class="list-content">
-                    <p>Reset Password</p>
-                </div>
-                <i class="ri-mail-send-line" style="color:var(--text-dim)"></i>
-            </div>
-        </div>
-
-        <p style="text-align:center; color:var(--text-dim); font-size:0.75rem; margin-top:30px;">LifeOS Version 1.0.0 (Billion Dollar Scale)</p>
     </div>
 
-    <!-- Bottom App Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link">
-            <i class="ri-home-5-line"></i>
-            <span>Home</span>
-        </a>
-        <a href="vault.html" class="nav-link">
-            <i class="ri-shield-lock-line"></i>
-            <span>Vault</span>
-        </a>
-        <a href="expenses.html" class="nav-link">
-            <i class="ri-wallet-3-line"></i>
-            <span>Spent</span>
-        </a>
-        <a href="reminders.html" class="nav-link">
-            <i class="ri-calendar-todo-line"></i>
-            <span>Alerts</span>
-        </a>
-        <a href="profile.html" class="nav-link active">
-            <i class="ri-user-settings-fill"></i>
-            <span>Profile</span>
-        </a>
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
+        <a href="subscription.html" class="nav-link"><i class="ri-vip-crown-line"></i><span>Pro</span></a>
+        <a href="profile.html" class="nav-link active"><i class="ri-user-3-fill"></i><span>Profile</span></a>
     </nav>
-
-    <style>
-        .list-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .list-item:last-child { border-bottom: none; }
-        .list-item i:first-child {
-            font-size: 1.4rem;
-            margin-right: 15px;
-            color: var(--primary);
-        }
-        .list-content { flex: 1; }
-        .list-content label {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .list-content p { font-size: 1rem; font-weight: 500; }
-    </style>
 
     <script src="js/supabase-config.js"></script>
     <script src="js/api.js"></script>
