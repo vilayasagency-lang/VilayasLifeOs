@@ -32,13 +32,13 @@
             </div>
         </div>
 
-        <!-- Category Chips (Scrollable) -->
-        <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; scrollbar-width: none;">
-            <div class="chip active">All</div>
-            <div class="chip">ID Cards</div>
-            <div class="chip">Finance</div>
-            <div class="chip">Health</div>
-        </div>
+      <div class="category-scroll" style="display:flex; gap:10px; overflow-x:auto; padding: 20px 0;">
+    <div class="chip active" onclick="filterVault('all')">All</div>
+    <div class="chip" onclick="filterVault('id')">🆔 ID Cards</div>
+    <div class="chip" onclick="filterVault('finance')">💰 Finance</div>
+    <div class="chip" onclick="filterVault('health')">🏥 Health</div>
+    <div class="chip" onclick="filterVault('education')">🎓 Education</div>
+</div>
 
         <!-- File List Container -->
         <div id="vault-list" class="mt-10">
