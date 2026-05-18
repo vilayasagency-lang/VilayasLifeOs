@@ -1,74 +1,64 @@
+let currentCategory = 'all';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return window.location.href = 'login.html';
+    if (!session) return window.location.replace('login.html');
 
-    const userId = session.user.id;
-    loadFiles(userId);
+    loadVault(session.user.id);
 
     // Handle Upload
-    const fileInput = document.getElementById('file-input');
-    fileInput.onchange = async (e) => {
+    document.getElementById('vault-file-input').onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // 1. Get Signed URL from Cloudflare Worker
-        const { uploadUrl, fileKey } = await api.getUploadUrl(file.name, file.type, 'vault');
+        try {
+            // 1. Get Signed URL from Worker
+            const { uploadUrl, fileKey } = await api.getUploadUrl(file.name, file.type, 'vault');
+            
+            // 2. PUT to R2
+            await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
 
-        // 2. Direct Upload to R2
-        const response = await fetch(uploadUrl, {
-            method: 'PUT',
-            body: file,
-            headers: { 'Content-Type': file.type }
-        });
-
-        if (response.ok) {
-            // 3. Save Metadata to Supabase
+            // 3. Save to Supabase
             await supabase.from('vault_files').insert([{
-                user_id: userId,
+                user_id: session.user.id,
                 file_name: file.name,
                 file_key: fileKey,
                 file_size: file.size,
-                file_type: file.type
+                category: currentCategory
             }]);
-            loadFiles(userId);
-            alert("File secured successfully!");
-        }
+            
+            location.reload();
+        } catch (err) { alert("Upload Failed: " + err.message); }
     };
 });
 
-async function loadFiles(userId) {
-    const list = document.getElementById('vault-list');
-    const { data: files } = await supabase
-        .from('vault_files')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-    if (!files || files.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding:50px; color:var(--text-dim);">
-            <i class="ri-folder-open-line" style="font-size:3rem; opacity:0.3;"></i>
-            <p>Your vault is empty</p>
-        </div>`;
+async function loadVault(userId) {
+    const container = document.getElementById('vault-list');
+    let query = supabase.from('vault_files').select('*').eq('user_id', userId).order('created_at', {ascending: false});
+    
+    if(currentCategory !== 'all') query = query.eq('category', currentCategory);
+    
+    const { data: files } = await query;
+    if(!files || files.length === 0) {
+        container.innerHTML = `<p style="text-align:center; padding: 50px; color: var(--text-dim);">No files in this category.</p>`;
         return;
     }
 
-    list.innerHTML = files.map(f => `
-        <div class="file-item">
+    container.innerHTML = files.map(f => `
+        <div class="file-card">
             <div class="file-icon"><i class="ri-file-text-line"></i></div>
             <div style="flex:1">
-                <p style="font-weight:600; font-size:0.9rem;">${f.file_name.substring(0, 20)}...</p>
-                <p style="font-size:0.75rem; color:var(--text-dim);">${(f.file_size / 1024 / 1024).toFixed(2)} MB</p>
+                <p style="font-weight:600; font-size:0.9rem;">${f.file_name.substring(0,20)}</p>
+                <p style="font-size:0.75rem; color:var(--text-dim);">${(f.file_size/1024/1024).toFixed(2)} MB</p>
             </div>
-            <button onclick="deleteFile('${f.id}')" style="background:none; border:none; color:var(--danger); font-size:1.2rem;">
-                <i class="ri-delete-bin-7-line"></i>
-            </button>
+            <i class="ri-delete-bin-line" style="color:var(--danger); font-size:1.2rem;" onclick="deleteFile('${f.id}')"></i>
         </div>
     `).join('');
 }
 
-async function deleteFile(id) {
-    if(confirm("Permanently delete this file?")) {
-        await supabase.from('vault_files').delete().eq('id', id);
-        location.reload();
-    }
+function filterVault(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    loadVault(window.supabase.auth.user().id); // Dummy reload
 }
