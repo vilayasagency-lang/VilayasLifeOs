@@ -9,103 +9,42 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
     <header class="app-header">
         <div class="logo">Vault</div>
         <div class="header-actions">
-            <input type="file" id="file-input" hidden>
-            <button onclick="document.getElementById('file-input').click()" style="background:var(--primary); border:none; color:white; padding:8px 15px; border-radius:10px; font-weight:600;">
-                <i class="ri-add-line"></i> Upload
-            </button>
+            <input type="file" id="vault-file-input" hidden>
+            <button onclick="document.getElementById('vault-file-input').click()" class="btn-primary" style="padding: 10px 15px; width: auto; font-size: 0.9rem;">+ Upload</button>
         </div>
     </header>
 
-    <div class="content">
-        <!-- Storage Indicator -->
-        <div class="card" style="padding: 15px;">
-            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:10px;">
-                <span style="color:var(--text-dim)">Storage Used</span>
-                <span id="storage-percent">0%</span>
-            </div>
-            <div style="width:100%; height:6px; background:#334155; border-radius:10px;">
-                <div id="storage-bar" style="width:0%; height:100%; background:var(--primary); border-radius:10px;"></div>
-            </div>
+    <div class="app-container">
+        <!-- Category Chips -->
+        <div style="display:flex; gap:10px; overflow-x:auto; padding: 10px 0 20px 0; scrollbar-width: none;">
+            <div class="chip active" onclick="filterVault('all')">All</div>
+            <div class="chip" onclick="filterVault('id')">🆔 IDs</div>
+            <div class="chip" onclick="filterVault('finance')">💰 Finance</div>
+            <div class="chip" onclick="filterVault('health')">🏥 Health</div>
+            <div class="chip" onclick="filterVault('education')">🎓 School</div>
         </div>
 
-      <div class="category-scroll" style="display:flex; gap:10px; overflow-x:auto; padding: 20px 0;">
-    <div class="chip active" onclick="filterVault('all')">All</div>
-    <div class="chip" onclick="filterVault('id')">🆔 ID Cards</div>
-    <div class="chip" onclick="filterVault('finance')">💰 Finance</div>
-    <div class="chip" onclick="filterVault('health')">🏥 Health</div>
-    <div class="chip" onclick="filterVault('education')">🎓 Education</div>
-</div>
-
-        <!-- File List Container -->
-        <div id="vault-list" class="mt-10">
-            <!-- Loading State -->
-            <p style="text-align:center; color:var(--text-dim); margin-top:50px;">Fetching secure files...</p>
+        <div id="vault-list">
+            <p style="text-align:center; padding: 50px; color: var(--text-dim);">Fetching files...</p>
         </div>
     </div>
 
-    <!-- Bottom App Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link">
-            <i class="ri-home-5-line"></i>
-            <span>Home</span>
-        </a>
-        <a href="vault.html" class="nav-link active">
-            <i class="ri-shield-lock-fill"></i>
-            <span>Vault</span>
-        </a>
-        <a href="expenses.html" class="nav-link">
-            <i class="ri-wallet-3-line"></i>
-            <span>Spent</span>
-        </a>
-        <a href="reminders.html" class="nav-link">
-            <i class="ri-calendar-todo-line"></i>
-            <span>Alerts</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <i class="ri-user-settings-line"></i>
-            <span>Profile</span>
-        </a>
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link active"><i class="ri-shield-lock-fill"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
+        <a href="subscription.html" class="nav-link"><i class="ri-vip-crown-line"></i><span>Pro</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
     </nav>
 
     <style>
-        .chip {
-            background: var(--card);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            color: var(--text-dim);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .chip.active {
-            background: var(--primary);
-            color: white;
-            border: none;
-        }
-        .file-item {
-            display: flex;
-            align-items: center;
-            background: var(--card);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-        }
-        .file-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-right: 15px;
-        }
+        .chip { background: var(--card); padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; white-space: nowrap; border: 1px solid var(--border); }
+        .chip.active { background: var(--primary); border-color: var(--primary); }
+        .file-card { background: var(--card); padding: 15px; border-radius: 16px; display: flex; align-items: center; margin-bottom: 12px; border: 1px solid var(--border); }
+        .file-icon { width: 45px; height: 45px; background: rgba(59,130,246,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.4rem; color: var(--primary); }
     </style>
 
     <script src="js/supabase-config.js"></script>
