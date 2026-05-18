@@ -1,3 +1,9 @@
+// Ensure we use the global supabase instance
+const supabase = window.supabase; 
+
+if (!supabase) {
+    console.error("Supabase is not defined! Check script order.");
+}
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
