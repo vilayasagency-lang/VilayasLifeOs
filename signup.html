@@ -65,8 +65,13 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="/js/supabase-config.js"></script>
-    <script src="/js/auth.js"></script>
+    <!-- 1. Pehle Supabase ki Library (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- 2. Phir aapka Config file (Jisme humne window.supabase banaya hai) -->
+<script src="/js/supabase-config.js"></script>
+
+<!-- 3. Sabse aakhri mein Auth file (Jo login/signup handle karti hai) -->
+<script src="/js/auth.js"></script>
 </body>
 </html>
