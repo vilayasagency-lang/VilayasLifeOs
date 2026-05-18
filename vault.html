@@ -2,90 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Secure Vault | LifeOS</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/vault.css"> <!-- Specific styling for vault -->
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="dashboard-body">
+<body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">Life<span>OS</span></div>
-        <nav class="sidebar-nav">
-            <a href="/dashboard.html" class="nav-item">Dashboard</a>
-            <a href="/vault.html" class="nav-item active">Secure Vault</a>
-            <a href="/reminders.html" class="nav-item">Reminders</a>
-            <a href="/expenses.html" class="nav-item">Expenses</a>
-        </nav>
-        <div class="sidebar-footer">
-            <button id="logout-btn" class="btn-logout">Logout</button>
+    <header class="app-header">
+        <div class="logo">Vault</div>
+        <div class="header-actions">
+            <input type="file" id="file-input" hidden>
+            <button onclick="document.getElementById('file-input').click()" style="background:var(--primary); border:none; color:white; padding:8px 15px; border-radius:10px; font-weight:600;">
+                <i class="ri-add-line"></i> Upload
+            </button>
         </div>
-    </aside>
+    </header>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <h1>Secure Vault</h1>
-            <div class="vault-actions">
-                <input type="file" id="vault-upload-input" hidden multiple>
-                <button class="btn-primary" onclick="document.getElementById('vault-upload-input').click()">
-                    <span>↑</span> Upload Document
-                </button>
+    <div class="content">
+        <!-- Storage Indicator -->
+        <div class="card" style="padding: 15px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:10px;">
+                <span style="color:var(--text-dim)">Storage Used</span>
+                <span id="storage-percent">0%</span>
             </div>
-        </header>
-
-        <!-- Storage Info -->
-        <section class="storage-info">
-            <div class="storage-bar-container">
-                <p>Storage Used: <span id="storage-used">0 MB</span> of 500 MB</p>
-                <div class="progress-bar">
-                    <div id="storage-progress" class="progress" style="width: 0%"></div>
-                </div>
+            <div style="width:100%; height:6px; background:#334155; border-radius:10px;">
+                <div id="storage-bar" style="width:0%; height:100%; background:var(--primary); border-radius:10px;"></div>
             </div>
-        </section>
+        </div>
 
-        <!-- Search and Filters -->
-        <section class="vault-filters">
-            <input type="text" id="vault-search" placeholder="Search files...">
-            <select id="vault-category-filter">
-                <option value="all">All Files</option>
-                <option value="id">Identity Docs</option>
-                <option value="finance">Finance</option>
-                <option value="medical">Medical</option>
-                <option value="other">Others</option>
-            </select>
-        </section>
+        <!-- Category Chips (Scrollable) -->
+        <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; scrollbar-width: none;">
+            <div class="chip active">All</div>
+            <div class="chip">ID Cards</div>
+            <div class="chip">Finance</div>
+            <div class="chip">Health</div>
+        </div>
 
-        <!-- Files Display -->
-        <section class="vault-grid" id="vault-files-container">
-            <!-- Skeleton Loader -->
-            <div class="file-card-skeleton"></div>
-            <div class="file-card-skeleton"></div>
-            <div class="file-card-skeleton"></div>
-        </section>
-    </main>
-
-    <!-- File Detail Modal -->
-    <div id="file-modal" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-file-name">Document.pdf</h3>
-            <div class="file-preview" id="file-preview-area">
-                <!-- Preview will be generated here -->
-                <p>No preview available</p>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-outline" id="delete-file-btn">Delete</button>
-                <button class="btn-primary" id="download-file-btn">Download</button>
-                <button class="btn-secondary" id="close-vault-modal">Close</button>
-            </div>
+        <!-- File List Container -->
+        <div id="vault-list" class="mt-10">
+            <!-- Loading State -->
+            <p style="text-align:center; color:var(--text-dim); margin-top:50px;">Fetching secure files...</p>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="/js/supabase-config.js"></script>
-    <script src="/js/api.js"></script> <!-- Handles Cloudflare Worker calls -->
-    <script src="/js/vault.js"></script>
+    <!-- Bottom App Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-link">
+            <i class="ri-home-5-line"></i>
+            <span>Home</span>
+        </a>
+        <a href="vault.html" class="nav-link active">
+            <i class="ri-shield-lock-fill"></i>
+            <span>Vault</span>
+        </a>
+        <a href="expenses.html" class="nav-link">
+            <i class="ri-wallet-3-line"></i>
+            <span>Spent</span>
+        </a>
+        <a href="reminders.html" class="nav-link">
+            <i class="ri-calendar-todo-line"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <i class="ri-user-settings-line"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <style>
+        .chip {
+            background: var(--card);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            color: var(--text-dim);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .chip.active {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        .file-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+    </style>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/vault.js"></script>
 </body>
 </html>
