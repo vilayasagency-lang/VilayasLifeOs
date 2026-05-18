@@ -1,110 +1,49 @@
-/* --- LifeOS Mobile-First Design --- */
 :root {
-    --bg: #0f172a;
-    --card: #1e293b;
+    --bg: #0b0f1a;
+    --card: #161b2c;
     --primary: #3b82f6;
-    --danger: #ef4444;
-    --text: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #ffffff;
     --text-dim: #94a3b8;
-    --nav-height: 75px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    padding-bottom: calc(var(--nav-height) + 20px); /* Bottom nav space */
-    line-height: 1.5;
-}
+body { background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
 
-/* Header Section */
-.app-header {
-    padding: 20px;
-    background: var(--bg);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* Stunning Input Styles - Sabse badi problem yahi thi */
+.auth-container { padding: 40px 25px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+.auth-card { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
 
-.logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+.form-group { margin-bottom: 20px; width: 100%; }
+.form-group label { display: block; margin-bottom: 8px; color: var(--text-dim); font-size: 0.85rem; font-weight: 500; }
 
-/* Main Content Container */
-.content {
-    padding: 0 20px;
-    width: 100%;
-}
-
-/* Standard Mobile Card */
-.card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,0.05);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 { font-size: 1rem; color: var(--text-dim); margin-bottom: 10px; }
-.card h2 { font-size: 1.8rem; margin-bottom: 5px; }
-
-/* Bottom Tab Navigation (Replacement for Sidebar) */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: var(--nav-height);
-    background: rgba(30, 41, 59, 0.98);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1000;
-}
-
-.nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.75rem;
-    font-weight: 500;
-    gap: 5px;
-}
-
-.nav-link.active {
-    color: var(--primary);
-}
-
-.nav-link i {
-    font-size: 1.4rem;
-}
-
-/* Action Buttons */
-.btn-block {
-    width: 100%;
-    padding: 15px;
+input, select {
+    width: 100% !important; /* Forces width to be correct on mobile */
+    padding: 14px 18px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
     border-radius: 12px;
-    border: none;
-    background: var(--primary);
     color: white;
-    font-weight: 700;
     font-size: 1rem;
-    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+.btn-primary {
+    width: 100%; background: var(--primary); color: white; border: none;
+    padding: 16px; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
 }
 
-/* Utilities */
-.text-danger { color: var(--danger); }
-.mt-20 { margin-top: 20px; }
+/* Bottom Nav - Sidebar Kill switch */
+.bottom-nav {
+    position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(22, 27, 44, 0.95);
+    backdrop-filter: blur(15px); border-top: 1px solid var(--border);
+    display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+}
+.nav-link { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; text-align: center; }
+.nav-link.active { color: var(--primary); }
+.nav-link i { font-size: 1.5rem; display: block; margin-bottom: 4px; }
