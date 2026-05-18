@@ -1,87 +1,65 @@
-// Ensure we use the global supabase instance
-const supabase = window.supabase; 
-
-if (!supabase) {
-    console.error("Supabase is not defined! Check script order.");
-}
+// js/auth.js
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
+    const client = window.supabase;
 
-    // SIGNUP LOGIC
-if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
+    // --- SIGNUP LOGIC ---
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page refresh
+            const btn = document.getElementById('signup-btn');
+            btn.innerText = "Creating...";
+            btn.disabled = true;
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const fullname = document.getElementById('fullname').value;
+            const phone = document.getElementById('phone').value;
+            const gender = document.getElementById('gender').value;
+            const dob = document.getElementById('dob').value;
 
-            const { data, error } = await supabase.auth.signUp({
+            const { data, error } = await client.auth.signUp({
                 email,
                 password,
-                options: { data: { full_name: fullname } }
+                options: {
+                    data: { full_name: fullname, phone, gender, dob }
+                }
             });
 
-            if (error) throw error;
-            
-            alert("Signup Successful! Redirecting to login...");
-            window.location.href = '/login.html';
-        } catch (err) {
-            alert("Signup Failed: " + err.message); // Ye batayega ki error kya hai
-        }
-    });
-}
-
-// LOGIN LOGIC
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) throw error;
-
-            alert("Login Successful! Going to Dashboard...");
-            window.location.href = '/dashboard.html';
-        } catch (err) {
-            alert("Login Failed: " + err.message);
-        }
-    });
-}
+            if (error) {
+                alert("Error: " + error.message);
+                btn.innerText = "Create Account";
+                btn.disabled = false;
+            } else {
+                alert("Signup Success! Check Email or Login now.");
+                window.location.href = 'login.html';
+            }
+        });
+    }
 
     // --- LOGIN LOGIC ---
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            e.preventDefault(); // Stop page refresh
             const btn = document.getElementById('login-btn');
-
-            btn.innerText = "Logging in...";
+            btn.innerText = "Verifying...";
             btn.disabled = true;
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const { data, error } = await client.auth.signInWithPassword({ email, password });
 
             if (error) {
                 alert("Login Error: " + error.message);
                 btn.innerText = "Login";
                 btn.disabled = false;
             } else {
-                window.location.href = '/dashboard.html';
+                console.log("Login Successful", data);
+                // Redirecting systematically to dashboard
+                window.location.replace('dashboard.html'); 
             }
         });
-    }
-
-    // --- LOGOUT BUTTON TRIGGER ---
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.onclick = logoutUser;
     }
 });
