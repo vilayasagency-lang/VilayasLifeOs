@@ -3,7 +3,7 @@
  * Handles communication with Cloudflare Workers
  */
 
-const WORKER_URL = 'https://lifeos-api.YOUR_NAME.workers.dev'; // Yahan apna worker URL dalein
+const WORKER_URL = 'https://lifeos-api.web-app-vilayash.workers.dev/'; // Yahan apna worker URL dalein
 
 const api = {
     async getUploadUrl(fileName, fileType, folder) {
