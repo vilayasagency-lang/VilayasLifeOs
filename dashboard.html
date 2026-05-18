@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LifeOS Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Remix Icons library for the Bottom Nav -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -12,38 +13,60 @@
 
     <header class="app-header">
         <div class="logo">LifeOS</div>
-        <div class="user-avatar" onclick="location.href='profile.html'">
-            <img id="header-avatar" src="https://ui-avatars.com/api/?name=User" style="width:40px; border-radius:50%;">
+        <div class="header-icons">
+            <i class="ri-notification-3-line" style="font-size: 1.5rem;"></i>
         </div>
     </header>
 
-    <div class="app-container">
-        <h2 id="greeting" style="margin-bottom: 5px;">Hello, Loading...</h2>
-        <p id="date" style="color: var(--text-dim); margin-bottom: 25px;">Today</p>
-
-        <!-- Stats Grid -->
-        <div class="card" onclick="location.href='expenses.html'">
-            <p style="color:var(--text-dim)">Monthly Spend</p>
-            <h1 id="total-expense">₹0</h1>
+    <div class="content">
+        <div class="welcome-section">
+            <h1 id="user-greeting">Hi, Loading...</h1>
+            <p id="current-date" style="color: var(--text-dim);"></p>
         </div>
 
-        <div class="card" onclick="location.href='vault.html'">
-            <p style="color:var(--text-dim)">Vault Security</p>
-            <h3><span id="vault-count">0</span> Files Secure</h3>
-        </div>
+        <div class="mt-20">
+            <!-- Summary Stats -->
+            <div class="card" onclick="location.href='expenses.html'">
+                <h3>Monthly Expenses</h3>
+                <h2 id="total-spent">₹0</h2>
+                <p style="color:var(--primary); font-size: 0.8rem;">Tap to see breakdown →</p>
+            </div>
 
-        <div class="card" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
-            <h3>Upgrade to Pro</h3>
-            <p>Get 50GB R2 Cloud Storage</p>
+            <div class="card" onclick="location.href='vault.html'">
+                <h3>Vault Security</h3>
+                <h2 id="files-count">0 Files</h2>
+                <p style="color:var(--text-dim); font-size: 0.8rem;">Encrypted & Protected</p>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, #1d4ed8, #3b82f6);">
+                <h3 style="color: white;">Upgrade to Pro</h3>
+                <p style="color: rgba(255,255,255,0.8);">Get 50GB R2 Cloud Storage</p>
+            </div>
         </div>
     </div>
 
-    <!-- Bottom App Navigation -->
+    <!-- CLEAN BOTTOM NAVIGATION -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active"><i class="ri-home-line"></i>Home</a>
-        <a href="vault.html" class="nav-item"><i class="ri-lock-line"></i>Vault</a>
-        <a href="expenses.html" class="nav-item"><i class="ri-wallet-line"></i>Spend</a>
-        <a href="profile.html" class="nav-item"><i class="ri-user-line"></i>Profile</a>
+        <a href="dashboard.html" class="nav-link active">
+            <i class="ri-home-5-fill"></i>
+            <span>Home</span>
+        </a>
+        <a href="vault.html" class="nav-link">
+            <i class="ri-shield-lock-line"></i>
+            <span>Vault</span>
+        </a>
+        <a href="expenses.html" class="nav-link">
+            <i class="ri-wallet-3-line"></i>
+            <span>Spent</span>
+        </a>
+        <a href="reminders.html" class="nav-link">
+            <i class="ri-calendar-todo-line"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <i class="ri-user-settings-line"></i>
+            <span>Profile</span>
+        </a>
     </nav>
 
     <script src="js/supabase-config.js"></script>
