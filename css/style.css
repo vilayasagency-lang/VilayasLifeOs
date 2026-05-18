@@ -1,85 +1,110 @@
+/* --- LifeOS Mobile-First Design --- */
 :root {
     --bg: #0f172a;
     --card: #1e293b;
     --primary: #3b82f6;
+    --danger: #ef4444;
     --text: #f8fafc;
     --text-dim: #94a3b8;
-    --bottom-nav-height: 70px;
+    --nav-height: 75px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
 body {
     font-family: 'Inter', sans-serif;
-    background: var(--bg);
+    background-color: var(--bg);
     color: var(--text);
-    padding-bottom: var(--bottom-nav-height); /* Space for bottom nav */
-    overflow-x: hidden;
+    padding-bottom: calc(var(--nav-height) + 20px); /* Bottom nav space */
+    line-height: 1.5;
 }
 
-/* Container for Mobile Padding */
-.app-container { padding: 20px; }
-
-/* Header */
-header.app-header {
+/* Header Section */
+.app-header {
     padding: 20px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 100;
 }
 
 .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
 
-/* Card Style */
+/* Main Content Container */
+.content {
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* Standard Mobile Card */
 .card {
     background: var(--card);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 20px;
     margin-bottom: 15px;
     border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Bottom Navigation Bar (The App Feel) */
+.card h3 { font-size: 1rem; color: var(--text-dim); margin-bottom: 10px; }
+.card h2 { font-size: 1.8rem; margin-bottom: 5px; }
+
+/* Bottom Tab Navigation (Replacement for Sidebar) */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;
-    height: var(--bottom-nav-height);
-    background: rgba(30, 41, 59, 0.95);
+    width: 100%;
+    height: var(--nav-height);
+    background: rgba(30, 41, 59, 0.98);
     backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.1);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.1);
     z-index: 1000;
 }
 
-.nav-item {
+.nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
     color: var(--text-dim);
-    font-size: 0.7rem;
     text-decoration: none;
-    transition: 0.3s;
+    font-size: 0.75rem;
+    font-weight: 500;
+    gap: 5px;
 }
 
-.nav-item.active { color: var(--primary); }
-.nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+.nav-link.active {
+    color: var(--primary);
+}
 
-/* Mobile Buttons */
-.btn-action {
-    background: var(--primary);
-    color: white;
-    border: none;
+.nav-link i {
+    font-size: 1.4rem;
+}
+
+/* Action Buttons */
+.btn-block {
+    width: 100%;
     padding: 15px;
     border-radius: 12px;
-    width: 100%;
-    font-weight: 600;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
     font-size: 1rem;
+    cursor: pointer;
 }
+
+/* Utilities */
+.text-danger { color: var(--danger); }
+.mt-20 { margin-top: 20px; }
