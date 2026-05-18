@@ -3,23 +3,17 @@
  * Handles communication with Cloudflare Workers
  */
 
-const WORKER_URL = 'lifeos-api.web-app-vilayash.workers.dev'; // Aapka deployed worker URL
+const WORKER_URL = 'https://lifeos-api.YOUR_NAME.workers.dev'; // Yahan apna worker URL dalein
 
 const api = {
-    // Helper to get Auth Token from Supabase session
-    async getAuthHeader() {
+    async getUploadUrl(fileName, fileType, folder) {
         const { data: { session } } = await supabase.auth.getSession();
-        return session ? { 'Authorization': `Bearer ${session.access_token}` } : {};
-    },
-
-    // 1. Get Signed URL for R2 Upload (Security: User directly uploads to R2 using a temporary link)
-    async getUploadUrl(fileName, fileType, folder = 'vault-files') {
-        const headers = await this.getAuthHeader();
         const response = await fetch(`${WORKER_URL}/uploads/sign?file=${fileName}&type=${fileType}&folder=${folder}`, {
-            headers
+            headers: { 'Authorization': `Bearer ${session.access_token}` }
         });
-        return await response.json(); // Returns { uploadUrl, fileKey }
-    },
+        return await response.json();
+    }
+};
 
     // 2. Create Cashfree Payment Session
     async createPaymentSession(planId) {
