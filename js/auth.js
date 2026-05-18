@@ -6,38 +6,43 @@ document.addEventListener('DOMContentLoaded', () => {
 if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('signup-btn');
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const fullname = document.getElementById('fullname').value;
-        const phone = document.getElementById('phone').value;
-        const gender = document.getElementById('gender').value;
-        const dob = document.getElementById('dob').value;
+        try {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullname = document.getElementById('fullname').value;
 
-        btn.innerText = "Creating Account...";
-        btn.disabled = true;
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { full_name: fullname } }
+            });
 
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    full_name: fullname,
-                    phone: phone,
-                    gender: gender,
-                    dob: dob
-                }
-            }
-        });
-
-        if (error) {
-            alert("Signup Error: " + error.message);
-            btn.innerText = "Create Account";
-            btn.disabled = false;
-        } else {
-            alert("Success! Please check your email for verification.");
+            if (error) throw error;
+            
+            alert("Signup Successful! Redirecting to login...");
             window.location.href = '/login.html';
+        } catch (err) {
+            alert("Signup Failed: " + err.message); // Ye batayega ki error kya hai
+        }
+    });
+}
+
+// LOGIN LOGIC
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+            if (error) throw error;
+
+            alert("Login Successful! Going to Dashboard...");
+            window.location.href = '/dashboard.html';
+        } catch (err) {
+            alert("Login Failed: " + err.message);
         }
     });
 }
