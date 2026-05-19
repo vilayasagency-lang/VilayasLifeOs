@@ -2,78 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account | LifeOS</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/auth.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Join LifeOS</title>
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="auth-page">
+<body>
 
     <div class="auth-container">
         <div class="auth-card">
-            <div class="auth-header">
-                <h2>Join LifeOS</h2>
-                <p>Start organizing your digital life today.</p>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h1 style="color: var(--primary); font-weight: 800; font-size: 2rem;">Life<span>OS</span></h1>
+                <p style="color: var(--text-dim); margin-top: 5px;">Start organizing your digital life today.</p>
             </div>
-            
-            <form id="signup-form" class="auth-form">
-    <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="fullname" placeholder="John Doe" required>
-    </div>
 
-    <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="name@example.com" required>
-    </div>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullname" placeholder="John Doe" required>
+                </div>
 
-    <!-- Naye Fields -->
-    <div class="form-group">
-        <label>Mobile Number</label>
-        <input type="tel" id="phone" placeholder="+91 0000000000" required>
-    </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="name@example.com" required>
+                </div>
 
-    <div class="form-row" style="display:flex; gap:10px;">
-        <div class="form-group" style="flex:1;">
-            <label>Gender</label>
-            <select id="gender" required>
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-        <div class="form-group" style="flex:1;">
-            <label>Date of Birth</label>
-            <input type="date" id="dob" required>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Min 6 characters" minlength="6" required>
-    </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="phone" placeholder="+91 00000 00000" required>
+                </div>
 
-    <button type="submit" class="btn-primary" id="signup-btn">Create Account</button>
-</form>
+                <!-- Gender & DOB in 2 Columns -->
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Gender</label>
+                        <select id="gender" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                </div>
 
-            <div class="auth-footer">
-                <p>Already have an account? <a href="/login.html">Login</a></p>
-                <p class="terms">By signing up, you agree to our Terms & Privacy.</p>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Min. 6 characters" minlength="6" required>
+                </div>
+
+                <button type="submit" class="btn-primary" id="signup-btn">Create Free Account</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; font-size: 0.9rem;">
+                <p style="color: var(--text-dim);">Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login</a></p>
+                <p style="margin-top: 15px; font-size: 0.75rem; color: var(--text-dim); opacity: 0.7;">By signing up, you agree to our Terms & Privacy.</p>
             </div>
         </div>
     </div>
 
-    <!-- Footer ke paas scripts -->
-
-<!-- 1. Supabase SDK (Full Version) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
-
-<!-- 2. Aapka Config (Isme alert aayega agar library mil gayi) -->
-<script src="js/supabase-config.js"></script>
-
-<!-- 3. Aapka Auth Logic -->
-<script src="js/auth.js"></script>
+    <!-- Scripts Order -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
