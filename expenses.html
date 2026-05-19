@@ -4,92 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Expenses | LifeOS</title>
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
     <header class="app-header">
         <div class="logo">Expenses</div>
-        <button onclick="openExpenseModal()" style="background:var(--primary); border:none; color:white; padding:10px 20px; border-radius:12px; font-weight:700;">
-            + Add
+        <button onclick="openExpenseModal()" class="btn-primary" style="width:auto; padding:8px 15px; font-size: 0.85rem;">
+            <i class="ri-add-line"></i> Add
         </button>
     </header>
 
-    <div class="content">
+    <div class="app-container">
         <!-- Monthly Summary Card -->
-        <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--primary);">
-            <p style="color:var(--text-dim); font-size:0.8rem;">Spent this month</p>
-            <h1 id="month-total" style="font-size: 2.5rem; margin: 10px 0;">₹0</h1>
-            <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-                <span id="budget-status">Budget: ₹50,000</span>
-                <span style="color:var(--primary)">Set Limit</span>
+        <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--primary); text-align: center; padding: 30px 20px;">
+            <p style="color:var(--text-dim); font-size:0.8rem; text-transform: uppercase; letter-spacing: 1px;">Monthly Spend</p>
+            <h1 id="month-total" style="font-size: 2.8rem; margin: 10px 0; font-weight: 800;">₹0</h1>
+            <div style="display:flex; justify-content:center; gap: 15px; font-size:0.85rem; margin-top: 10px;">
+                <span style="color:var(--text-dim)">Limit: ₹50,000</span>
+                <span style="color:var(--primary); font-weight: 700;">Set Budget</span>
             </div>
         </div>
 
-        <!-- Transaction List -->
-        <h3 style="margin: 20px 0 10px 0; font-size: 1.1rem;">Recent Transactions</h3>
-        <div id="expense-list">
-            <!-- Loading State -->
-            <p style="text-align:center; color:var(--text-dim); margin-top:30px;">Loading spends...</p>
+        <!-- Category Filters (Scrollable Chips) -->
+        <div class="chip-container">
+            <div class="chip active" onclick="filterExpenses('all', this)">All</div>
+            <div class="chip" onclick="filterExpenses('food', this)">🍔 Food</div>
+            <div class="chip" onclick="filterExpenses('transport', this)">🚗 Transport</div>
+            <div class="chip" onclick="filterExpenses('shopping', this)">🛍️ Shopping</div>
+            <div class="chip" onclick="filterExpenses('bills', this)">⚡ Bills</div>
+        </div>
+
+        <!-- Expense List -->
+        <div id="expense-list" style="margin-top: 5px;">
+            <p style="text-align:center; color:var(--text-dim); padding:40px;">Fetching transactions...</p>
         </div>
     </div>
 
-    <!-- Bottom App Navigation -->
+    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link">
-            <i class="ri-home-5-line"></i>
-            <span>Home</span>
-        </a>
-        <a href="vault.html" class="nav-link">
-            <i class="ri-shield-lock-line"></i>
-            <span>Vault</span>
-        </a>
-        <a href="expenses.html" class="nav-link active">
-            <i class="ri-wallet-3-fill"></i>
-            <span>Spent</span>
-        </a>
-        <a href="reminders.html" class="nav-link">
-            <i class="ri-calendar-todo-line"></i>
-            <span>Alerts</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <i class="ri-user-settings-line"></i>
-            <span>Profile</span>
-        </a>
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link active"><i class="ri-wallet-3-fill"></i><span>Spent</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
     </nav>
 
-    <!-- Add Expense Modal (Mobile Bottom Sheet Style) -->
-    <div id="expense-modal" class="modal-overlay">
+    <!-- Add Expense Bottom Sheet (Modal) -->
+    <div id="expense-modal" class="modal-overlay" onclick="if(event.target == this) closeExpenseModal()">
         <div class="bottom-sheet">
-            <div class="handle"></div>
-            <h3>New Transaction</h3>
-            <form id="expense-form" class="mt-20">
-                <input type="number" id="amount" placeholder="Amount (₹)" required class="mobile-input">
-                <input type="text" id="desc" placeholder="What did you buy?" required class="mobile-input">
-                <select id="category" class="mobile-input">
-                    <option value="food">🍔 Food</option>
-                    <option value="transport">🚗 Transport</option>
-                    <option value="bills">⚡ Bills</option>
-                    <option value="shopping">🛍️ Shopping</option>
-                </select>
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <button type="button" onclick="closeExpenseModal()" class="btn-secondary" style="flex:1">Cancel</button>
-                    <button type="submit" class="btn-block" style="flex:2">Save Expense</button>
+            <div class="sheet-handle"></div>
+            <h3 style="margin-bottom: 20px;">Add New Transaction</h3>
+            <form id="expense-form">
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" id="exp-amount" placeholder="0.00" required>
                 </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="exp-desc" placeholder="e.g. Dinner with friends" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="exp-category">
+                        <option value="food">Food & Drinks</option>
+                        <option value="transport">Transport</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="bills">Bills & Utilities</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Save Expense</button>
             </form>
         </div>
     </div>
 
     <style>
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: flex-end; }
-        .bottom-sheet { background: var(--card); width: 100%; border-radius: 25px 25px 0 0; padding: 30px 20px; animation: slideUp 0.3s ease-out; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: flex-end; }
+        .bottom-sheet { background: var(--card); width: 100%; border-radius: 25px 25px 0 0; padding: 25px; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .handle { width: 40px; height: 5px; background: #475569; border-radius: 10px; margin: -10px auto 20px auto; }
-        .mobile-input { width: 100%; background: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 12px; color: white; margin-bottom: 15px; font-size: 1rem; outline: none; }
-        .btn-secondary { background: #334155; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 600; }
-        .expense-item { display: flex; align-items: center; background: var(--card); padding: 15px; border-radius: 16px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+        .sheet-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: -10px auto 20px auto; }
+        .expense-item { display: flex; align-items: center; background: var(--card); padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .cat-icon { width: 40px; height: 40px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem; }
     </style>
 
     <script src="js/supabase-config.js"></script>
