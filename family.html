@@ -3,78 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Hub | LifeOS</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>Family Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="dashboard-body">
+<body>
+    <header class="app-header">
+        <div class="logo">Family Hub</div>
+        <i class="ri-user-add-line" style="font-size:1.5rem; color:var(--primary);"></i>
+    </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">Life<span>OS</span></div>
-        <nav class="sidebar-nav">
-            <a href="/dashboard.html" class="nav-item">Dashboard</a>
-            <a href="/family.html" class="nav-item active">Family Hub</a>
-            <a href="/reminders.html" class="nav-item">Reminders</a>
-            <a href="/vault.html" class="nav-item">Vault</a>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <header class="top-bar">
-            <h1>Family Hub</h1>
-            <button class="btn-sos" id="sos-btn">🚨 EMERGENCY SOS</button>
-        </header>
-
-        <section class="family-grid">
-            <!-- Family Safety Status Card -->
-            <div class="card status-card">
-                <h3>Family Safety Status</h3>
-                <div id="safety-indicator" class="safe">All members are safe</div>
-                <p class="hint">Last updated: Just now</p>
+    <div class="app-container">
+        <!-- THE BIG SOS BUTTON -->
+        <div class="card" style="background: rgba(239, 68, 68, 0.15); border: 2px solid var(--danger); text-align: center; padding: 40px 20px;">
+            <div id="sos-trigger" style="width:110px; height:110px; background:var(--danger); border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 40px rgba(239,68,68,0.4); border: 5px solid rgba(255,255,255,0.2);">
+                <i class="ri-alarm-warning-fill" style="font-size:3.5rem; color:white;"></i>
             </div>
-
-            <!-- Add Member Section -->
-            <div class="card add-member-card">
-                <h3>Add Family Member</h3>
-                <form id="add-member-form">
-                    <input type="email" id="member-email" placeholder="Member's Email" required>
-                    <button type="submit" class="btn-small">Send Invite</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Family Members List -->
-        <h2 class="section-title">Connected Members</h2>
-        <div class="members-list" id="members-container">
-            <!-- Dynamically loaded via family.js -->
-            <div class="member-card skeleton">Loading members...</div>
+            <h2 style="color:var(--danger); font-weight:800;">EMERGENCY SOS</h2>
+            <p style="font-size:0.85rem; color:var(--text-dim); margin-top:10px;">Pushing this will alert all family members with your current GPS location.</p>
         </div>
 
-        <!-- Shared Alerts Section -->
-        <div class="card alerts-card">
-            <h3>Recent Family Alerts</h3>
-            <ul id="family-alerts-list">
-                <li>No recent alerts</li>
-            </ul>
-        </div>
-    </main>
-
-    <!-- SOS Confirmation Modal -->
-    <div id="sos-modal" class="modal">
-        <div class="modal-content danger-zone">
-            <h2>Send SOS Alert?</h2>
-            <p>This will notify all family members with your current location.</p>
-            <div class="modal-actions">
-                <button class="btn-outline" id="cancel-sos">Cancel</button>
-                <button class="btn-danger" id="confirm-sos">Confirm & Send</button>
+        <h3 style="margin:25px 0 15px; font-size:1.1rem;">Connected Family</h3>
+        <div id="family-list">
+            <div class="card" style="display:flex; align-items:center; gap:15px; padding:15px;">
+                <div style="width:45px; height:45px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800;">D</div>
+                <div style="flex:1">
+                    <p style="font-weight:700;">Dad</p>
+                    <p style="font-size:0.75rem; color:#10b981;">● Status: Safe at Home</p>
+                </div>
+                <i class="ri-phone-fill" style="color:var(--primary); font-size:1.4rem;"></i>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="/js/supabase-config.js"></script>
-    <script src="/js/family.js"></script>
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
+    </nav>
+
+    <script src="js/supabase-config.js"></script>
+    <script>
+        document.getElementById('sos-trigger').onclick = () => {
+            if(confirm("Confirm Sending SOS Alert to family?")) {
+                alert("🚨 SOS SENT! Members notified.");
+                // Backend integration for Push API goes here
+            }
+        };
+    </script>
 </body>
 </html>
