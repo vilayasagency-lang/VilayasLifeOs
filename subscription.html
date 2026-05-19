@@ -3,100 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription & Plans | LifeOS</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
-    <!-- Cashfree SDK for secure checkout -->
-    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <title>Upgrade | LifeOS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script> <!-- Cashfree SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="dashboard-body">
+<body>
+    <header class="app-header">
+        <div class="logo">Upgrade</div>
+        <i class="ri-vip-crown-fill" style="color:gold; font-size:1.5rem;"></i>
+    </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">Life<span>OS</span></div>
-        <nav class="sidebar-nav">
-            <a href="/dashboard.html" class="nav-item">Dashboard</a>
-            <a href="/profile.html" class="nav-item">Profile</a>
-            <a href="/subscription.html" class="nav-item active">Subscription</a>
-        </nav>
-    </aside>
+    <div class="app-container">
+        <div class="pro-banner" style="text-align:center; padding:40px 20px;">
+            <h1 style="color:white; font-size:2rem; margin-bottom:10px;">Go Premium</h1>
+            <p style="color:rgba(255,255,255,0.8);">Unlock the full potential of your Life Infrastructure.</p>
+        </div>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <h1>Manage Subscription</h1>
-        </header>
-
-        <!-- Current Plan Status -->
-        <section class="current-plan-card">
-            <div class="card">
-                <div class="plan-info">
-                    <h3>Current Plan: <span id="current-plan-name">Free Tier</span></h3>
-                    <p id="plan-expiry">Upgrade for unlimited storage and family features.</p>
-                </div>
-                <div class="plan-badge" id="status-badge">Active</div>
-            </div>
-        </section>
-
-        <!-- Pricing Table -->
-        <section class="pricing-grid">
-            <!-- Free Plan -->
-            <div class="pricing-card">
-                <h2>Starter</h2>
-                <div class="price">₹0<span>/forever</span></div>
-                <ul class="features-list">
-                    <li>✓ 500 MB Secure Vault</li>
-                    <li>✓ Basic Reminders</li>
-                    <li>✓ Single User Access</li>
-                    <li>✕ No Family Hub</li>
-                </ul>
-                <button class="btn-outline" disabled>Current Plan</button>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="pricing-card featured">
-                <div class="popular-tag">Best Value</div>
-                <h2>Pro Life</h2>
-                <div class="price">₹199<span>/month</span></div>
-                <ul class="features-list">
-                    <li>✓ 50 GB R2 Cloud Storage</li>
-                    <li>✓ Full Family Hub Access</li>
-                    <li>✓ Priority SOS Alerts</li>
-                    <li>✓ Advanced Expense Analytics</li>
-                </ul>
-                <button class="btn-primary" id="upgrade-pro-btn">Upgrade to Pro</button>
-            </div>
-
-            <!-- Enterprise/Life Plan -->
-            <div class="pricing-card">
-                <h2>Legend</h2>
-                <div class="price">₹999<span>/year</span></div>
-                <ul class="features-list">
-                    <li>✓ 1 TB R2 Cloud Storage</li>
-                    <li>✓ Everything in Pro</li>
-                    <li>✓ Early Access to AI Tools</li>
-                    <li>✓ Dedicated Support</li>
-                </ul>
-                <button class="btn-primary" id="upgrade-legend-btn">Go Legend</button>
-            </div>
-        </section>
-
-        <section class="payment-security">
-            <p>🔒 Payments secured by Cashfree. PCI-DSS Compliant.</p>
-        </section>
-    </main>
-
-    <!-- Payment Processing Overlay -->
-    <div id="payment-overlay" class="modal">
-        <div class="modal-content">
-            <div class="loader"></div>
-            <p>Initializing Secure Payment...</p>
+        <div class="card" style="margin-top:-30px; position:relative; z-index:2;">
+            <h2 style="text-align:center; margin-bottom:20px;">₹199<span style="font-size:1rem; color:var(--text-dim);">/month</span></h2>
+            <ul style="list-style:none; padding:0; margin-bottom:25px;">
+                <li style="margin-bottom:12px;"><i class="ri-checkbox-circle-fill" style="color:#10b981;"></i> 1TB R2 Cloud Storage</li>
+                <li style="margin-bottom:12px;"><i class="ri-checkbox-circle-fill" style="color:#10b981;"></i> Family SOS Hub Access</li>
+                <li style="margin-bottom:12px;"><i class="ri-checkbox-circle-fill" style="color:#10b981;"></i> Real-time Bill Alerts</li>
+            </ul>
+            <button id="pay-btn" class="btn-primary">Pay Securely</button>
+            <p style="text-align:center; font-size:0.7rem; color:var(--text-dim); margin-top:15px;">🔒 Secured by Cashfree Payments</p>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="/js/supabase-config.js"></script>
-    <script src="/js/api.js"></script> <!-- To call Worker for Payment Session -->
-    <script src="/js/subscription.js"></script>
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
+        <a href="profile.html" class="nav-link active"><i class="ri-user-3-fill"></i><span>Profile</span></a>
+    </nav>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/subscription.js"></script>
 </body>
 </html>
