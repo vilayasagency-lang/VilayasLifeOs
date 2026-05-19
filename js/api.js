@@ -3,15 +3,25 @@
  * Handles communication with Cloudflare Workers
  */
 
-const WORKER_URL = 'https://lifeos-api.web-app-vilayash.workers.dev/'; // Yahan apna worker URL dalein
+// js/api.js
+const WORKER_URL = 'https://lifeos-api.vilayash.workers.dev'; // Check if this matches your worker!
 
-const api = {
+window.api = {
     async getUploadUrl(fileName, fileType, folder) {
-        const { data: { session } } = await supabase.auth.getSession();
-        const response = await fetch(`${WORKER_URL}/uploads/sign?file=${fileName}&type=${fileType}&folder=${folder}`, {
-            headers: { 'Authorization': `Bearer ${session.access_token}` }
-        });
-        return await response.json();
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw new Error("No session");
+
+            const response = await fetch(`${WORKER_URL}/uploads/sign?file=${fileName}&type=${fileType}&folder=${folder}`, {
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
+            });
+            
+            if (!response.ok) throw new Error("Worker Error");
+            return await response.json();
+        } catch (err) {
+            console.error("API Error:", err);
+            throw err;
+        }
     }
 };
 
