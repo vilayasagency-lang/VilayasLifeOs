@@ -3,49 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LifeOS Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Dashboard | LifeOS</title>
+    <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Session Security Check (No flickering) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check session before showing content
+            const { data: { session } } = await window.supabase.auth.getSession();
+            if (!session) {
+                window.location.replace('login.html');
+            }
+        });
+    </script>
 </head>
 <body>
 
     <header class="app-header">
         <div class="logo">Life<span>OS</span></div>
-        <i class="ri-notification-3-line" style="font-size: 1.4rem;"></i>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <i class="ri-notification-3-line" style="font-size: 1.4rem; color: var(--text-dim);"></i>
+            <div onclick="location.href='profile.html'" style="width: 35px; height: 35px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">
+                US
+            </div>
+        </div>
     </header>
 
-    <div class="welcome">
-        <h1 id="greeting">Hi, Loading...</h1>
-        <p id="current-date" style="color:var(--text-dim)">Checking session...</p>
+    <div class="welcome-section" style="margin-bottom: 25px;">
+        <h1 id="greeting" style="font-size: 1.8rem; font-weight: 800;">Hi, Loading...</h1>
+        <p id="current-date" style="color: var(--text-dim); font-size: 0.9rem;">Monday, 18 May</p>
     </div>
 
-    <div class="card mt-20" onclick="location.href='expenses.html'" style="margin-top:20px;">
-        <p>Monthly Expenses</p>
-        <h2 id="total-spent">₹0</h2>
-        <span style="color:var(--primary); font-size: 0.75rem;">View Analytics →</span>
+    <!-- Summary Cards Grid -->
+    <div class="card" onclick="location.href='expenses.html'" style="border-left: 5px solid var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3>Monthly Expenses</h3>
+                <h2 id="total-spent">₹0</h2>
+            </div>
+            <i class="ri-arrow-right-s-line" style="font-size: 1.5rem; color: var(--text-dim);"></i>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.75rem; color: var(--primary);">Tap to view breakdown →</p>
     </div>
 
     <div class="card" onclick="location.href='vault.html'">
-        <p>Secure Vault</p>
-        <h2 id="files-count">0 Files</h2>
-        <span style="color:var(--text-dim); font-size: 0.75rem;">Last added: Just now</span>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3>Secure Vault</h3>
+                <h2 id="files-count">0 Files</h2>
+            </div>
+            <i class="ri-shield-check-line" style="font-size: 2rem; color: var(--primary); opacity: 0.3;"></i>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.75rem;">100% Encrypted & Safe</p>
     </div>
 
-    <div class="pro-banner">
-        <h3>LifeOS Pro</h3>
-        <p style="font-size: 0.8rem; opacity: 0.9;">1TB Storage & Family Tracking</p>
+    <!-- Pro Banner (Embedded in Profile but shown here as a teaser) -->
+    <div class="pro-banner" onclick="location.href='profile.html'">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <i class="ri-vip-crown-fill" style="font-size: 2rem; color: gold;"></i>
+            <div>
+                <h3 style="color: white; margin-bottom: 2px;">Upgrade to Pro</h3>
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem;">Get 1TB R2 Cloud Storage & SOS Alerts</p>
+            </div>
+        </div>
     </div>
 
+    <!-- Family/Alerts Status -->
+    <div class="card" style="margin-top: 15px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+            <h3 style="margin-bottom: 0; color: #10b981;">Family Hub: Safe</h3>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation (The UI Standard) -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link active"><i class="ri-home-5-fill"></i><span>Home</span></a>
-        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
-        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
-        <a href="reminders.html" class="nav-link"><i class="ri-notification-badge-line"></i><span>Alerts</span></a>
-        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
+        <a href="dashboard.html" class="nav-link active">
+            <i class="ri-home-5-fill"></i>
+            <span>Home</span>
+        </a>
+        <a href="vault.html" class="nav-link">
+            <i class="ri-shield-lock-line"></i>
+            <span>Vault</span>
+        </a>
+        <a href="expenses.html" class="nav-link">
+            <i class="ri-wallet-3-line"></i>
+            <span>Spent</span>
+        </a>
+        <a href="reminders.html" class="nav-link">
+            <i class="ri-notification-3-line"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <i class="ri-user-3-line"></i>
+            <span>Profile</span>
+        </a>
     </nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Scripts -->
     <script src="js/supabase-config.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
