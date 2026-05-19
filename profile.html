@@ -2,46 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Profile | LifeOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <header class="app-header">
-        <div class="logo">Settings</div>
-        <button id="logout-btn" style="background:none; border:none; color:var(--danger); font-weight:700;">Logout</button>
-    </header>
-
     <div class="app-container">
-        <div style="text-align:center; margin-bottom: 30px;">
-            <div style="position:relative; display:inline-block;">
-                <img id="avatar-img" src="https://ui-avatars.com/api/?name=User" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--primary);">
+        <div class="profile-header">
+            <div class="avatar-box">
+                <img id="avatar-img" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff">
                 <input type="file" id="avatar-input" hidden>
-                <button onclick="document.getElementById('avatar-input').click()" style="position:absolute; bottom:0; right:0; background:var(--primary); border:none; color:white; width:30px; height:30px; border-radius:50%;"><i class="ri-camera-line"></i></button>
+                <div class="edit-badge" onclick="document.getElementById('avatar-input').click()"><i class="ri-camera-fill"></i></div>
             </div>
-            <h2 id="display-name" style="margin-top:15px;">Loading...</h2>
+            <h2 id="user-name">Loading...</h2>
+            <div class="pro-badge">FREE ACCOUNT</div>
         </div>
 
-        <div class="auth-card">
+        <!-- Pro Features Banner -->
+        <div class="card" style="background: linear-gradient(135deg, #1d4ed8, #3b82f6); border:none; margin-top:20px;">
+            <h3 style="color:white;">LifeOS Pro</h3>
+            <p style="color:rgba(255,255,255,0.8); font-size:0.8rem;">Get 1TB Storage, SOS Family Tracking & more.</p>
+            <button class="btn-primary" style="margin-top:15px; background:white; color:var(--primary);">Upgrade Now</button>
+        </div>
+
+        <div class="settings-list mt-20">
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" id="edit-name">
+                <input type="text" id="p-name">
             </div>
             <div class="form-group">
                 <label>Mobile Number</label>
-                <input type="tel" id="edit-phone">
-            </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select id="edit-gender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
+                <input type="tel" id="p-phone">
             </div>
             <button onclick="updateProfile()" class="btn-primary">Update Profile</button>
+            <button onclick="logout()" class="btn-danger-outline mt-10">Logout Account</button>
         </div>
     </div>
 
@@ -49,7 +45,7 @@
         <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
         <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
         <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
-        <a href="subscription.html" class="nav-link"><i class="ri-vip-crown-line"></i><span>Pro</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
         <a href="profile.html" class="nav-link active"><i class="ri-user-3-fill"></i><span>Profile</span></a>
     </nav>
 
