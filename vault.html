@@ -2,41 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vault</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Secure Vault | LifeOS</title>
+    <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
     <header class="app-header">
         <div class="logo">Vault</div>
-        <button onclick="document.getElementById('file-upload').click()" class="btn-primary" style="width:auto; padding:8px 15px;">+ Upload</button>
-        <input type="file" id="file-upload" hidden>
+        <div class="header-actions">
+            <input type="file" id="vault-upload" hidden>
+            <button onclick="document.getElementById('vault-upload').click()" class="btn-primary" style="width:auto; padding:8px 15px; font-size: 0.85rem;">
+                <i class="ri-add-line"></i> Add File
+            </button>
+        </div>
     </header>
 
-    <div class="chip-container">
-        <div class="chip active">All</div>
-        <div class="chip">🆔 ID Cards</div>
-        <div class="chip">💰 Finance</div>
-        <div class="chip">🏥 Health</div>
+    <div class="app-container">
+        <!-- Storage Summary Card -->
+        <div class="card" style="padding: 15px; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 0.75rem; color: var(--text-dim);">R2 Cloud Storage</span>
+                <span style="font-size: 0.75rem; color: var(--primary); font-weight: 700;" id="storage-usage">0 MB / 500 MB</span>
+            </div>
+            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                <div id="storage-bar" style="width: 2%; height: 100%; background: var(--primary); border-radius: 10px; transition: 0.5s;"></div>
+            </div>
+        </div>
+
+        <!-- Horizontal Category Chips -->
+        <div class="chip-container">
+            <div class="chip active" onclick="setCategory('all', this)">All</div>
+            <div class="chip" onclick="setCategory('id', this)">🆔 ID Cards</div>
+            <div class="chip" onclick="setCategory('finance', this)">💰 Finance</div>
+            <div class="chip" onclick="setCategory('health', this)">🏥 Health</div>
+            <div class="chip" onclick="setCategory('certificates', this)">🎓 Certificates</div>
+            <div class="chip" onclick="setCategory('others', this)">📁 Others</div>
+        </div>
+
+        <!-- Files Display Grid -->
+        <div id="vault-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+            <!-- Loading Skeletons -->
+            <div class="card skeleton" style="height: 150px; border-radius: 16px;"></div>
+            <div class="card skeleton" style="height: 150px; border-radius: 16px;"></div>
+        </div>
     </div>
 
-    <div id="vault-list">
-        <!-- JS will render files here -->
-    </div>
-
+    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
-        <a href="vault.html" class="nav-link active"><i class="ri-shield-lock-fill"></i><span>Vault</span></a>
-        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
-        <a href="reminders.html" class="nav-link"><i class="ri-notification-badge-line"></i><span>Alerts</span></a>
-        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
+        <a href="dashboard.html" class="nav-link">
+            <i class="ri-home-5-line"></i>
+            <span>Home</span>
+        </a>
+        <a href="vault.html" class="nav-link active">
+            <i class="ri-shield-lock-fill"></i>
+            <span>Vault</span>
+        </a>
+        <a href="expenses.html" class="nav-link">
+            <i class="ri-wallet-3-line"></i>
+            <span>Spent</span>
+        </a>
+        <a href="reminders.html" class="nav-link">
+            <i class="ri-notification-3-line"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <i class="ri-user-3-line"></i>
+            <span>Profile</span>
+        </a>
     </nav>
 
+    <style>
+        .file-item {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            position: relative;
+            text-align: center;
+        }
+        .file-preview {
+            width: 100%;
+            height: 100px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .file-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .file-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        .file-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+    </style>
+
+    <!-- Scripts -->
     <script src="js/supabase-config.js"></script>
-    <script src="js/api.js"></script> <!-- Order is fixed -->
+    <script src="js/api.js"></script> <!-- Required for R2 Signed URL -->
     <script src="js/vault.js"></script>
-    <script src="js/profile.js"></script>
 </body>
 </html>
