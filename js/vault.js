@@ -1,64 +1,40 @@
+// js/vault.js
 let currentCategory = 'all';
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return window.location.replace('login.html');
-
-    loadVault(session.user.id);
-
-    // Handle Upload
-    document.getElementById('vault-file-input').onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        try {
-            // 1. Get Signed URL from Worker
-            const { uploadUrl, fileKey } = await api.getUploadUrl(file.name, file.type, 'vault');
-            
-            // 2. PUT to R2
-            await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
-
-            // 3. Save to Supabase
-            await supabase.from('vault_files').insert([{
-                user_id: session.user.id,
-                file_name: file.name,
-                file_key: fileKey,
-                file_size: file.size,
-                category: currentCategory
-            }]);
-            
-            location.reload();
-        } catch (err) { alert("Upload Failed: " + err.message); }
-    };
-});
-
-async function loadVault(userId) {
-    const container = document.getElementById('vault-list');
-    let query = supabase.from('vault_files').select('*').eq('user_id', userId).order('created_at', {ascending: false});
+async function loadVault() {
+    const { data: { user } } = await supabase.auth.getUser();
+    const grid = document.getElementById('vault-grid');
     
+    let query = supabase.from('vault_files').select('*').eq('user_id', user.id);
     if(currentCategory !== 'all') query = query.eq('category', currentCategory);
     
     const { data: files } = await query;
+    
     if(!files || files.length === 0) {
-        container.innerHTML = `<p style="text-align:center; padding: 50px; color: var(--text-dim);">No files in this category.</p>`;
+        grid.innerHTML = `<p class='empty'>No files found</p>`;
         return;
     }
 
-    container.innerHTML = files.map(f => `
-        <div class="file-card">
-            <div class="file-icon"><i class="ri-file-text-line"></i></div>
-            <div style="flex:1">
-                <p style="font-weight:600; font-size:0.9rem;">${f.file_name.substring(0,20)}</p>
-                <p style="font-size:0.75rem; color:var(--text-dim);">${(f.file_size/1024/1024).toFixed(2)} MB</p>
+    // Replace with your actual R2 Public URL
+    const R2_DOMAIN = 'https://pub-your-id.r2.dev'; 
+
+    grid.innerHTML = files.map(f => `
+        <div class="file-item">
+            <img src="${R2_DOMAIN}/${f.file_key}" onerror="this.src='https://placehold.co/100?text=File'">
+            <div class="file-info">
+                <span>${f.file_name}</span>
             </div>
-            <i class="ri-delete-bin-line" style="color:var(--danger); font-size:1.2rem;" onclick="deleteFile('${f.id}')"></i>
+            <button onclick="deleteFile('${f.id}')"><i class="ri-delete-bin-line"></i></button>
         </div>
     `).join('');
 }
 
-function filterVault(cat) {
+function setCategory(cat, el) {
     currentCategory = cat;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
-    loadVault(window.supabase.auth.user().id); // Dummy reload
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    loadVault();
 }
+
+// Ensure loadVault is called
+document.addEventListener('DOMContentLoaded', loadVault);
