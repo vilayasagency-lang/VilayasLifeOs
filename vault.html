@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Secure Vault | LifeOS</title>
+    <title>Secure Vault</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="app-header">
-        <div class="logo">Vault</div>
-        <div class="header-actions">
-            <input type="file" id="vault-file-input" hidden>
-            <button onclick="document.getElementById('vault-file-input').click()" class="btn-primary" style="padding: 10px 15px; width: auto; font-size: 0.9rem;">+ Upload</button>
-        </div>
+        <h1 class="logo-text">Vault</h1>
+        <button onclick="document.getElementById('vault-upload').click()" class="btn-primary" style="width:auto; padding:10px 20px;">+ Add File</button>
+        <input type="file" id="vault-upload" hidden>
     </header>
 
     <div class="app-container">
-        <!-- Category Chips -->
-        <div style="display:flex; gap:10px; overflow-x:auto; padding: 10px 0 20px 0; scrollbar-width: none;">
-            <div class="chip active" onclick="filterVault('all')">All</div>
-            <div class="chip" onclick="filterVault('id')">🆔 IDs</div>
-            <div class="chip" onclick="filterVault('finance')">💰 Finance</div>
-            <div class="chip" onclick="filterVault('health')">🏥 Health</div>
-            <div class="chip" onclick="filterVault('education')">🎓 School</div>
+        <!-- Category Selector -->
+        <div class="category-pills">
+            <div class="pill active" onclick="setCategory('all', this)">All</div>
+            <div class="pill" onclick="setCategory('id', this)">🆔 ID Cards</div>
+            <div class="pill" onclick="setCategory('finance', this)">💰 Finance</div>
+            <div class="pill" onclick="setCategory('health', this)">🏥 Health</div>
         </div>
 
-        <div id="vault-list">
-            <p style="text-align:center; padding: 50px; color: var(--text-dim);">Fetching files...</p>
+        <div id="vault-grid" class="file-grid">
+            <div class="loader">Loading your secure files...</div>
         </div>
     </div>
 
@@ -36,19 +33,12 @@
         <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
         <a href="vault.html" class="nav-link active"><i class="ri-shield-lock-fill"></i><span>Vault</span></a>
         <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
-        <a href="subscription.html" class="nav-link"><i class="ri-vip-crown-line"></i><span>Pro</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
         <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
     </nav>
 
-    <style>
-        .chip { background: var(--card); padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; white-space: nowrap; border: 1px solid var(--border); }
-        .chip.active { background: var(--primary); border-color: var(--primary); }
-        .file-card { background: var(--card); padding: 15px; border-radius: 16px; display: flex; align-items: center; margin-bottom: 12px; border: 1px solid var(--border); }
-        .file-icon { width: 45px; height: 45px; background: rgba(59,130,246,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.4rem; color: var(--primary); }
-    </style>
-
     <script src="js/supabase-config.js"></script>
-    <script src="js/api.js"></script>
+    <script src="js/api.js"></script> <!-- Ye line zaroori hai -->
     <script src="js/vault.js"></script>
 </body>
 </html>
