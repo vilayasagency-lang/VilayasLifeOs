@@ -2,21 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerts | LifeOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Alerts | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="app-header">
-        <h1 class="logo-text">Daily Alerts</h1>
-        <button class="btn-primary" style="width:auto; padding:10px 15px;">+ New</button>
+        <div class="logo">Alerts</div>
+        <button onclick="openReminderModal()" class="btn-primary" style="width:auto; padding:8px 15px;">+ Set</button>
     </header>
 
     <div class="app-container">
-        <div class="card">
-            <p style="color:var(--text-dim); text-align:center; padding:40px;">No critical alerts for today.</p>
+        <div id="reminders-list" style="margin-top:10px;">
+            <p style="text-align:center; padding:50px; color:var(--text-dim);">No active alerts.</p>
+        </div>
+    </div>
+
+    <!-- Bottom Sheet Modal -->
+    <div id="rem-modal" class="modal-overlay" onclick="if(event.target==this) closeReminderModal()">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <h3>New Alert</h3>
+            <form id="reminder-form" style="margin-top:20px;">
+                <div class="form-group">
+                    <label>Task / Bill Title</label>
+                    <input type="text" id="rem-title" placeholder="e.g. Rent Payment" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="datetime-local" id="rem-time" required>
+                </div>
+                <button type="submit" class="btn-primary">Activate Alert</button>
+            </form>
         </div>
     </div>
 
@@ -27,5 +46,20 @@
         <a href="reminders.html" class="nav-link active"><i class="ri-notification-3-fill"></i><span>Alerts</span></a>
         <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
     </nav>
+
+    <style>
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: flex-end; }
+        .bottom-sheet { background: var(--card); width: 100%; border-radius: 25px 25px 0 0; padding: 25px; animation: slideUp 0.3s; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .sheet-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: -10px auto 20px; }
+        .rem-item { background: var(--card); padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; align-items: center; }
+    </style>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/reminders.js"></script>
+    <script>
+        function openReminderModal() { document.getElementById('rem-modal').style.display = 'flex'; }
+        function closeReminderModal() { document.getElementById('rem-modal').style.display = 'none'; }
+    </script>
 </body>
 </html>
