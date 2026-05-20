@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Alerts | LifeOS</title>
+    <title>Alerts | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
     <header class="app-header">
-        <div class="logo">Alerts</div>
-        <button onclick="openReminderModal()" class="btn-primary" style="width:auto; padding:8px 15px;">+ Set</button>
+        <div class="logo" style="text-shadow: 0 0 15px var(--primary);">Alerts</div>
+        <button onclick="openReminderModal(); window.resetModal();" class="btn-primary" style="width:auto; padding:10px 20px; font-size:0.8rem;">
+            + New Alert
+        </button>
     </header>
 
     <div class="app-container">
         <div id="reminders-list" style="margin-top:10px;">
-            <p style="text-align:center; padding:50px; color:var(--text-dim);">No active alerts.</p>
+            <p style="text-align:center; opacity:0.5; padding:50px;">Loading your schedule...</p>
         </div>
     </div>
 
-    <!-- Bottom Sheet Modal -->
+    <!-- Add/Edit Alert Bottom Sheet -->
     <div id="rem-modal" class="modal-overlay" onclick="if(event.target==this) closeReminderModal()">
         <div class="bottom-sheet">
             <div class="sheet-handle"></div>
-            <h3>New Alert</h3>
+            <h3 id="modal-title">Set New Alert</h3>
             <form id="reminder-form" style="margin-top:20px;">
                 <div class="form-group">
                     <label>Task / Bill Title</label>
-                    <input type="text" id="rem-title" placeholder="e.g. Rent Payment" required>
+                    <input type="text" id="rem-title" placeholder="e.g. Electricity Bill" required>
                 </div>
                 <div class="form-group">
-                    <label>Time</label>
+                    <label>Alert Time (Local)</label>
                     <input type="datetime-local" id="rem-time" required>
                 </div>
-                <button type="submit" class="btn-primary">Activate Alert</button>
+                <button type="submit" id="submit-btn" class="btn-primary">Activate Alert</button>
             </form>
         </div>
     </div>
 
+    <!-- Navigation -->
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
         <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
@@ -47,19 +51,17 @@
         <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
     </nav>
 
-    <style>
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: flex-end; }
-        .bottom-sheet { background: var(--card); width: 100%; border-radius: 25px 25px 0 0; padding: 25px; animation: slideUp 0.3s; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .sheet-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: -10px auto 20px; }
-        .rem-item { background: var(--card); padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; align-items: center; }
-    </style>
-
     <script src="js/supabase-config.js"></script>
     <script src="js/reminders.js"></script>
     <script>
         function openReminderModal() { document.getElementById('rem-modal').style.display = 'flex'; }
         function closeReminderModal() { document.getElementById('rem-modal').style.display = 'none'; }
+        window.resetModal = () => {
+            window.editingId = null;
+            document.getElementById('reminder-form').reset();
+            document.getElementById('modal-title').innerText = "Set New Alert";
+            document.getElementById('submit-btn').innerText = "Activate Alert";
+        };
     </script>
 </body>
 </html>
