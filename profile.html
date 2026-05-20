@@ -2,119 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Profile Settings | LifeOS</title>
-    <!-- Remix Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My Profile | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
     <header class="app-header">
-        <div class="logo">Profile</div>
-        <button id="logout-btn" style="background:none; border:none; color:var(--danger); font-weight:700; font-size:0.9rem;">Logout</button>
+        <div class="logo-brand">LifeOS</div>
+        <i class="ri-settings-4-fill" style="font-size: 1.5rem; color: var(--text-dim);"></i>
     </header>
 
-    <div class="app-container">
-        <!-- Profile Picture Section -->
-        <div style="text-align: center; margin-bottom: 30px;">
-            <div style="position: relative; display: inline-block;">
-                <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--card); object-fit: cover;">
-                <input type="file" id="avatar-input" accept="image/*" hidden>
+    <div style="padding: 0 20px;">
+        <!-- Avatar Section -->
+        <div class="profile-hero">
+            <div class="avatar-container">
+                <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff">
                 <div class="edit-badge" onclick="document.getElementById('avatar-input').click()">
-                    <i class="ri-camera-fill"></i>
+                    <i class="ri-camera-lens-fill"></i>
                 </div>
+                <input type="file" id="avatar-input" hidden accept="image/*">
             </div>
-            <h2 id="display-name" style="margin-top: 15px; font-weight: 800;">User Name</h2>
-            <p id="display-email" style="color: var(--text-dim); font-size: 0.85rem;">user@example.com</p>
+            <h2 id="display-name" style="margin-top: 15px; font-weight: 800;">Bhavesh Swain</h2>
+            <p id="display-email" style="color: var(--text-dim); font-size: 0.85rem;">bhavesh.swain@gmail.com</p>
         </div>
 
-        <!-- Subscription Pro Banner -->
-        <div class="pro-banner" style="margin-bottom: 25px; position: relative; overflow: hidden;">
-            <div style="position: relative; z-index: 2;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <h3 style="color: white; font-weight: 800;">LifeOS Pro</h3>
-                    <span class="badge" id="plan-status">FREE</span>
-                </div>
-                <p style="color: rgba(255,255,255,0.8); font-size: 0.8rem; margin: 10px 0 15px;">Unlock 1TB R2 Storage, Family Tracking & Priority Alerts.</p>
-                <button class="btn-primary" style="background: white; color: var(--primary); padding: 12px; font-size: 0.9rem;">Upgrade Now</button>
+        <!-- Pro Banner -->
+        <div class="card" style="background: linear-gradient(135deg, #1d4ed8, #6366f1); border:none;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <h3 style="color:white; font-weight:800;">LifeOS Pro</h3>
+                <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:10px; font-size:0.7rem; color:white; font-weight:800;">FREE</span>
             </div>
-            <i class="ri-vip-crown-fill" style="position: absolute; right: -10px; bottom: -10px; font-size: 6rem; color: rgba(255,255,255,0.1);"></i>
+            <p style="color:rgba(255,255,255,0.8); font-size:0.8rem; margin: 10px 0;">Unlock 1TB R2 Storage & SOS Tracking.</p>
+            <button class="btn-primary" style="background:white; color:#1d4ed8; padding:12px; box-shadow:none;">UPGRADE NOW</button>
         </div>
 
-        <!-- Edit Profile Form -->
+        <!-- Edit Form -->
         <div class="card">
-            <h3 style="margin-bottom: 20px; font-size: 1rem;"><i class="ri-user-settings-line"></i> Personal Details</h3>
-            
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="edit-fullname" placeholder="Enter your name">
+            <div class="form-group" style="margin-bottom:20px;">
+                <label style="color:var(--text-dim); font-size:0.75rem; font-weight:700;">FULL NAME</label>
+                <input type="text" id="edit-fullname">
             </div>
-
-            <div class="form-group">
-                <label>Mobile Number</label>
-                <input type="tel" id="edit-phone" placeholder="+91 00000 00000">
+            <div class="form-group" style="margin-bottom:20px;">
+                <label style="color:var(--text-dim); font-size:0.75rem; font-weight:700;">MOBILE NUMBER</label>
+                <input type="tel" id="edit-phone">
             </div>
-
-            <div class="form-group">
-                <label>Gender</label>
+            <div class="form-group" style="margin-bottom:25px;">
+                <label style="color:var(--text-dim); font-size:0.75rem; font-weight:700;">GENDER</label>
                 <select id="edit-gender">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
             </div>
-
-            <button onclick="saveProfileUpdates()" class="btn-primary" id="save-profile-btn">Save Changes</button>
+            <button onclick="saveProfileUpdates()" class="btn-primary" id="save-btn">SAVE CHANGES</button>
         </div>
 
-        <p style="text-align: center; color: var(--text-dim); font-size: 0.7rem; margin-top: 30px;">
-            LifeOS v1.0 • Built for Billion-Dollar Scale
-        </p>
+        <!-- Danger Zone (Logout) -->
+        <div class="card danger-zone" onclick="logoutUser()">
+            <div style="display:flex; align-items:center; gap:15px; color: #ef4444;">
+                <i class="ri-logout-circle-r-line" style="font-size:1.5rem;"></i>
+                <div style="font-weight:800;">LOGOUT ACCOUNT</div>
+            </div>
+        </div>
     </div>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link">
-            <i class="ri-home-5-line"></i>
-            <span>Home</span>
-        </a>
-        <a href="vault.html" class="nav-link">
-            <i class="ri-shield-lock-line"></i>
-            <span>Vault</span>
-        </a>
-        <a href="expenses.html" class="nav-link">
-            <i class="ri-wallet-3-line"></i>
-            <span>Spent</span>
-        </a>
-        <a href="reminders.html" class="nav-link">
-            <i class="ri-notification-3-line"></i>
-            <span>Alerts</span>
-        </a>
-        <a href="profile.html" class="nav-link active">
-            <i class="ri-user-3-fill"></i>
-            <span>Profile</span>
-        </a>
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-6-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-keyhole-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-line"></i><span>Spent</span></a>
+        <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
+        <a href="profile.html" class="nav-link active"><i class="ri-user-heart-fill"></i><span>Profile</span></a>
     </nav>
 
-    <style>
-        .edit-badge {
-            position: absolute; bottom: 0; right: 5px; 
-            background: var(--primary); color: white; 
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            border: 3px solid var(--bg); font-size: 1rem;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2); color: white;
-            padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800;
-        }
-    </style>
-
-    <!-- Scripts Order -->
     <script src="js/supabase-config.js"></script>
-    <script src="js/api.js"></script> 
+    <script src="js/api.js"></script>
     <script src="js/profile.js"></script>
+    <script>
+        async function logoutUser() {
+            if(confirm("Logout from LifeOS?")) {
+                await supabase.auth.signOut();
+                window.location.replace('login.html');
+            }
+        }
+    </script>
 </body>
 </html>
