@@ -2,66 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Alerts | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
     <header class="app-header">
-        <div class="logo" style="text-shadow: 0 0 15px var(--primary);">Alerts</div>
-        <button onclick="openReminderModal(); window.resetModal();" class="btn-primary" style="width:auto; padding:10px 20px; font-size:0.8rem;">
-            + New Alert
-        </button>
+        <div class="logo-brand">Alerts</div>
+        <button onclick="openModal()" style="background:var(--primary); border:none; color:white; padding:8px 16px; border-radius:12px; font-weight:800; font-size:0.75rem;">+ SET ALERT</button>
     </header>
 
-    <div class="app-container">
+    <div style="padding: 0 20px;">
         <div id="reminders-list" style="margin-top:10px;">
-            <p style="text-align:center; opacity:0.5; padding:50px;">Loading your schedule...</p>
+            <p style="text-align:center; padding:50px; opacity:0.3;">Loading schedules...</p>
         </div>
     </div>
 
-    <!-- Add/Edit Alert Bottom Sheet -->
-    <div id="rem-modal" class="modal-overlay" onclick="if(event.target==this) closeReminderModal()">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-            <h3 id="modal-title">Set New Alert</h3>
-            <form id="reminder-form" style="margin-top:20px;">
-                <div class="form-group">
-                    <label>Task / Bill Title</label>
-                    <input type="text" id="rem-title" placeholder="e.g. Electricity Bill" required>
-                </div>
-                <div class="form-group">
-                    <label>Alert Time (Local)</label>
-                    <input type="datetime-local" id="rem-time" required>
-                </div>
-                <button type="submit" id="submit-btn" class="btn-primary">Activate Alert</button>
+    <!-- Alert Modal -->
+    <div id="rem-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:2000; align-items:flex-end;">
+        <div class="bottom-sheet" style="width:100%;">
+            <h3 id="modal-title" style="margin-bottom:20px; font-weight:800;">New Life Alert</h3>
+            <form id="reminder-form">
+                <input type="text" id="rtitle" placeholder="Alert Title (e.g. Health Insurance)" required>
+                <input type="datetime-local" id="rtime" required>
+                <button type="submit" id="rsubmit" class="btn-primary">ACTIVATE NEON ALERT</button>
+                <button type="button" onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text-dim); margin-top:15px; font-weight:600;">DISMISS</button>
             </form>
         </div>
     </div>
 
-    <!-- Navigation -->
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link"><i class="ri-home-5-line"></i><span>Home</span></a>
-        <a href="vault.html" class="nav-link"><i class="ri-shield-lock-line"></i><span>Vault</span></a>
-        <a href="expenses.html" class="nav-link"><i class="ri-wallet-3-line"></i><span>Spent</span></a>
+        <a href="dashboard.html" class="nav-link"><i class="ri-home-6-line"></i><span>Home</span></a>
+        <a href="vault.html" class="nav-link"><i class="ri-shield-keyhole-line"></i><span>Vault</span></a>
+        <a href="expenses.html" class="nav-link"><i class="ri-wallet-line"></i><span>Spent</span></a>
         <a href="reminders.html" class="nav-link active"><i class="ri-notification-3-fill"></i><span>Alerts</span></a>
-        <a href="profile.html" class="nav-link"><i class="ri-user-3-line"></i><span>Profile</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-heart-line"></i><span>Profile</span></a>
     </nav>
 
     <script src="js/supabase-config.js"></script>
     <script src="js/reminders.js"></script>
     <script>
-        function openReminderModal() { document.getElementById('rem-modal').style.display = 'flex'; }
-        function closeReminderModal() { document.getElementById('rem-modal').style.display = 'none'; }
-        window.resetModal = () => {
-            window.editingId = null;
-            document.getElementById('reminder-form').reset();
-            document.getElementById('modal-title').innerText = "Set New Alert";
-            document.getElementById('submit-btn').innerText = "Activate Alert";
-        };
+        function openModal() { document.getElementById('rem-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('rem-modal').style.display = 'none'; }
     </script>
 </body>
 </html>
