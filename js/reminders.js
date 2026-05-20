@@ -1,117 +1,56 @@
-/**
- * LifeOS Reminders Logic
- * Fixes: Timezone, Edit & Delete Working
- */
-
-window.editingId = null; 
+let editId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return window.location.replace('login.html');
-    
-    loadReminders(session.user.id);
+    const session = await window.checkAuth();
+    if(!session) return;
+    loadR(session.user.id);
 
-    // Handle Form Submit (Add or Update)
     document.getElementById('reminder-form').onsubmit = async (e) => {
         e.preventDefault();
-        const title = document.getElementById('rem-title').value;
-        const timeInput = document.getElementById('rem-time').value;
+        const title = document.getElementById('rtitle').value;
+        const time = new Date(document.getElementById('rtime').value).toISOString();
 
-        // Step 1: Handle Timezone (Local to ISO)
-        const isoTime = new Date(timeInput).toISOString();
-
-        try {
-            if (window.editingId) {
-                // UPDATE
-                const { error } = await supabase.from('reminders')
-                    .update({ title, time: isoTime })
-                    .eq('id', window.editingId);
-                if(error) throw error;
-                alert("Alert Updated! 🚀");
-            } else {
-                // INSERT
-                const { error } = await supabase.from('reminders').insert([{
-                    user_id: session.user.id,
-                    title: title,
-                    time: isoTime
-                }]);
-                if(error) throw error;
-                alert("Alert Activated! 🔔");
-            }
-
-            closeReminderModal();
-            location.reload();
-        } catch (err) {
-            alert("Error: " + err.message);
+        if(editId) {
+            await window.supabase.from('reminders').update({title, time}).eq('id', editId);
+            editId = null;
+        } else {
+            await window.supabase.from('reminders').insert([{user_id: session.user.id, title, time}]);
         }
+        location.reload();
     };
 });
 
-async function loadReminders(userId) {
-    const container = document.getElementById('reminders-list');
-    const { data: rems, error } = await supabase.from('reminders')
-        .select('*')
-        .eq('user_id', userId)
-        .order('time', {ascending: true});
-
-    if(error) {
-        container.innerHTML = `<p style="text-align:center; color:red;">Connection Error</p>`;
-        return;
-    }
-
-    if(!rems || rems.length === 0) {
-        container.innerHTML = `<p style="text-align:center; opacity:0.5; padding:50px;">No alerts found.</p>`;
-        return;
-    }
-
-    // Step 2: Convert UTC from DB to Local Time for Display
-    container.innerHTML = rems.map(r => {
-        const localTime = new Date(r.time).toLocaleString('en-IN', {
-            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-        });
-
-        return `
-            <div class="rem-item fade-in">
-                <div style="flex:1">
-                    <p style="font-weight:700; font-size:1rem;">${r.title}</p>
-                    <p style="font-size:0.8rem; color:var(--primary); font-weight:600;">
-                        <i class="ri-time-line"></i> ${localTime}
-                    </p>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button onclick="editRem('${r.id}', '${r.title}', '${r.time}')" style="background:none; border:none; color:var(--secondary); font-size:1.3rem;">
-                        <i class="ri-edit-box-line"></i>
-                    </button>
-                    <button onclick="deleteRem('${r.id}')" style="background:none; border:none; color:var(--accent); font-size:1.3rem;">
-                        <i class="ri-delete-bin-7-line"></i>
-                    </button>
-                </div>
+async function loadR(uid) {
+    const list = document.getElementById('reminders-list');
+    const { data: rems } = await window.supabase.from('reminders').select('*').eq('user_id', uid).order('time', {ascending:true});
+    
+    list.innerHTML = rems?.length > 0 ? rems.map(r => `
+        <div class="card flex-between" style="padding:15px; border-left:5px solid var(--primary);">
+            <div>
+                <p style="font-weight:800; font-size:0.95rem;">${r.title}</p>
+                <p style="font-size:0.75rem; color:var(--primary);">${new Date(r.time).toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'})}</p>
             </div>
-        `;
-    }).join('');
+            <div style="display:flex; gap:15px;">
+                <i class="ri-edit-box-line" style="color:var(--accent); font-size:1.2rem;" onclick="editR('${r.id}','${r.title}','${r.time}')"></i>
+                <i class="ri-delete-bin-7-line text-danger" style="font-size:1.2rem;" onclick="delR('${r.id}')"></i>
+            </div>
+        </div>
+    `).join('') : `<p style="text-align:center; opacity:0.3; padding:50px;">No alerts set</p>`;
 }
 
-// DELETE WORKING LOGIC
-window.deleteRem = async (id) => {
-    if(confirm("Confirm Delete Alert?")) {
-        const { error } = await supabase.from('reminders').delete().eq('id', id);
-        if(!error) location.reload();
-        else alert("Failed to delete.");
+window.delR = async (id) => {
+    if(confirm("Kill this alert?")) {
+        await window.supabase.from('reminders').delete().eq('id', id);
+        location.reload();
     }
 };
 
-// EDIT WORKING LOGIC
-window.editRem = (id, title, time) => {
-    window.editingId = id;
-    document.getElementById('modal-title').innerText = "Edit Alert";
-    document.getElementById('submit-btn').innerText = "Update Now";
-    
-    document.getElementById('rem-title').value = title;
-    
-    // ISO to local input format
-    const date = new Date(time);
+window.editR = (id, t, tm) => {
+    editId = id;
+    document.getElementById('rtitle').value = t;
+    const date = new Date(tm);
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    document.getElementById('rem-time').value = date.toISOString().slice(0,16);
-    
-    openReminderModal();
+    document.getElementById('rtime').value = date.toISOString().slice(0,16);
+    document.getElementById('modal-title').innerText = "Edit Alert";
+    openModal(); // Defined in reminders.html
 };
