@@ -1,26 +1,26 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return window.location.replace('login.html');
+    const session = await window.checkAuth();
+    if (!session) return;
 
     const user = session.user;
     
-    // UI Greeting
-    document.getElementById('greeting').innerText = `Hi, ${user.user_metadata.full_name || 'Chief'}`;
-    document.getElementById('current-date').innerText = new Date().toDateString();
-    
-    // Real Stats
-    fetchStats(user.id);
+    // UI Init
+    document.getElementById('user-name').innerText = `Hi, ${user.user_metadata.full_name || 'Chief'}`;
+    document.getElementById('today-date').innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
+
+    // Fetch Stats
+    fetchData(user.id);
 });
 
-async function fetchStats(uid) {
-    // Spends
-    const { data: exp } = await supabase.from('expenses').select('amount').eq('user_id', uid);
-    if(exp) {
+async function fetchData(uid) {
+    // 1. Expenses
+    const { data: exp } = await window.supabase.from('expenses').select('amount').eq('user_id', uid);
+    if (exp) {
         const total = exp.reduce((s, e) => s + parseFloat(e.amount), 0);
-        document.getElementById('total-spent').innerText = `₹${total.toLocaleString()}`;
+        document.getElementById('total-spent').innerText = `₹${total.toLocaleString('en-IN')}`;
     }
 
-    // Vault
-    const { count } = await supabase.from('vault_files').select('*', { count: 'exact', head: true }).eq('user_id', uid);
-    document.getElementById('files-count').innerText = `${count || 0} Files`;
+    // 2. Vault
+    const { count } = await window.supabase.from('vault_files').select('*', { count: 'exact', head: true }).eq('user_id', uid);
+    document.getElementById('vault-count').innerText = `${count || 0} Files`;
 }
