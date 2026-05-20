@@ -3,53 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Secure Vault | LifeOS</title>
+    <title>Vault | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="app-header">
-        <div class="logo-brand">Life<span>OS</span></div>
-        <button onclick="document.getElementById('vault-upload').click()" style="background:var(--primary); border:none; color:white; padding:8px 16px; border-radius:12px; font-weight:800; font-size:0.75rem; box-shadow:0 0 15px var(--glow);">+ ADD FILE</button>
-        <input type="file" id="vault-upload" hidden>
+        <div class="brand">Vault</div>
+        <button onclick="document.getElementById('file-up').click()" class="btn-primary" style="width:auto; padding:8px 16px; font-size:0.7rem;">+ UPLOAD</button>
+        <input type="file" id="file-up" hidden>
     </header>
 
-    <div style="padding: 0 20px;">
-        <!-- Storage Depth Card -->
-        <div class="card" style="padding: 15px; background: rgba(59, 130, 246, 0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 0.7rem; font-weight:800; color: var(--text-dim);">CLOUD STORAGE (R2)</span>
-                <span style="font-size: 0.7rem; color: var(--primary); font-weight: 800;" id="storage-usage">0 MB / 500 MB</span>
+    <div class="container fade-in">
+        <!-- Storage Card -->
+        <div class="card" style="padding: 15px; border-color: var(--primary);">
+            <div class="flex-between" style="margin-bottom:8px;">
+                <span style="font-size:0.7rem; font-weight:800; color:var(--text-dim);">CLOUD STORAGE (R2)</span>
+                <span id="st-usage" style="font-size:0.7rem; font-weight:800; color:var(--primary);">0 MB</span>
             </div>
-            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                <div id="storage-bar" style="width: 2%; height: 100%; background: var(--primary); box-shadow:0 0 10px var(--primary);"></div>
+            <div style="width:100%; height:4px; background:rgba(255,255,255,0.05); border-radius:10px;">
+                <div id="st-bar" style="width:0%; height:100%; background:var(--primary);"></div>
             </div>
         </div>
 
-        <!-- Scrollable Pills -->
-        <div class="chip-container">
-            <div class="chip active" onclick="setCategory('all', this)">All</div>
-            <div class="chip" onclick="setCategory('id', this)">🆔 ID Cards</div>
-            <div class="chip" onclick="setCategory('finance', this)">💰 Finance</div>
-            <div class="chip" onclick="setCategory('health', this)">🏥 Health</div>
+        <!-- Filter Chips -->
+        <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; scrollbar-width:none;">
+            <button class="chip active" onclick="filterV('all', this)">All</button>
+            <button class="chip" onclick="filterV('id', this)">🆔 IDs</button>
+            <button class="chip" onclick="filterV('finance', this)">💰 Finance</button>
+            <button class="chip" onclick="filterV('health', this)">🏥 Health</button>
         </div>
 
         <!-- 2-Column Grid -->
-        <div id="vault-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-            <p style="grid-column: span 2; text-align:center; padding:50px; opacity:0.3;">Securing connection...</p>
+        <div id="v-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <p style="grid-column: span 2; text-align:center; padding:50px; opacity:0.3;">Loading Vault...</p>
         </div>
     </div>
 
-    <!-- Navigation -->
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-link"><i class="ri-home-6-line"></i><span>Home</span></a>
         <a href="vault.html" class="nav-link active"><i class="ri-shield-keyhole-fill"></i><span>Vault</span></a>
         <a href="expenses.html" class="nav-link"><i class="ri-wallet-line"></i><span>Spent</span></a>
         <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
-        <a href="profile.html" class="nav-link"><i class="ri-user-heart-line"></i><span>Profile</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-6-line"></i><span>Profile</span></a>
     </nav>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/vault.js"></script>
