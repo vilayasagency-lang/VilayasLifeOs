@@ -3,38 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>LifeOS Dashboard</title>
+    <title>Home | LifeOS</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
     <header class="app-header">
-        <div class="logo-brand">Life<span>OS</span></div>
-        <div onclick="location.href='profile.html'" style="width:35px; height:35px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.7rem; border:2px solid var(--text);">US</div>
+        <div class="brand">Life<span>OS</span></div>
+        <i class="ri-notification-3-line" style="font-size: 1.4rem;"></i>
     </header>
 
-    <div style="padding: 20px;">
-        <h1 id="greeting" style="font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;">Hi, Loading...</h1>
-        <p id="current-date" style="color:var(--text-dim); margin-bottom:30px; font-weight:600;">Loading date...</p>
+    <div class="container fade-in">
+        <div style="margin-bottom: 30px;">
+            <h1 id="user-name" style="font-size: 2.2rem; font-weight: 800;">Hi, Chief</h1>
+            <p id="today-date" style="color: var(--text-dim); font-weight: 600;"></p>
+        </div>
 
-        <!-- Dynamic Spend Card -->
-        <div class="card" onclick="location.href='expenses.html'" style="border-left: 8px solid var(--primary);">
-            <p style="text-transform: uppercase; font-weight:800; font-size:0.7rem; letter-spacing:1px;">Monthly Spend</p>
-            <h2 id="total-spent" style="font-size: 2.8rem; margin: 5px 0;">₹0</h2>
-            <div style="width:100%; height:4px; background:rgba(255,255,255,0.05); border-radius:10px; margin-top:10px;">
-                <div style="width:40%; height:100%; background:var(--primary); box-shadow:0 0 15px var(--primary);"></div>
+        <!-- 3D Spend Card -->
+        <div class="card" onclick="location.href='expenses.html'" style="border-left: 6px solid var(--primary);">
+            <p style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">MONTHLY SPEND</p>
+            <h2 id="total-spent" style="font-size: 2.5rem; margin: 5px 0; color: var(--primary);">₹0</h2>
+            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 10px;">
+                <div style="width: 45%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary);"></div>
             </div>
         </div>
 
-        <!-- Vault Card -->
-        <div class="card" onclick="location.href='vault.html'" style="display:flex; justify-content:space-between; align-items:center;">
+        <!-- 3D Vault Card -->
+        <div class="card" onclick="location.href='vault.html'" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <p style="text-transform: uppercase; font-weight:800; font-size:0.7rem;">Secured Vault</p>
-                <h2 id="files-count">0 Files</h2>
+                <p style="font-size: 0.7rem; font-weight: 800;">SECURED VAULT</p>
+                <h2 id="vault-count">0 Files</h2>
             </div>
-            <i class="ri-shield-flash-fill" style="font-size:3.5rem; color:#10b981; filter: drop-shadow(0 0 15px #10b981);"></i>
+            <i class="ri-shield-flash-fill" style="font-size: 3rem; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent));"></i>
+        </div>
+        
+        <!-- Alerts Status -->
+        <div class="card" onclick="location.href='reminders.html'" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+            <div class="flex-between">
+                <p style="margin:0; font-weight: 700; color: var(--danger);">PENDING ALERTS</p>
+                <i class="ri-arrow-right-s-line"></i>
+            </div>
         </div>
     </div>
 
@@ -44,9 +52,10 @@
         <a href="vault.html" class="nav-link"><i class="ri-shield-keyhole-line"></i><span>Vault</span></a>
         <a href="expenses.html" class="nav-link"><i class="ri-wallet-line"></i><span>Spent</span></a>
         <a href="reminders.html" class="nav-link"><i class="ri-notification-3-line"></i><span>Alerts</span></a>
-        <a href="profile.html" class="nav-link"><i class="ri-user-heart-line"></i><span>Profile</span></a>
+        <a href="profile.html" class="nav-link"><i class="ri-user-6-line"></i><span>Profile</span></a>
     </nav>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
